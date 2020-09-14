@@ -1,5 +1,4 @@
 import { PlayerResolver } from "./Player";
-import { Team } from "./Team";
-import { Position } from "./Position";
+import { TeamResolver } from "./Team";
 
-export const resolvers = [PlayerResolver, Team, Position];
+export const resolvers = [PlayerResolver, TeamResolver];

@@ -1,46 +1,59 @@
 # Open Hockey
+
 Utilizing the NHL's API to develop a hockey statisitcs platform. A modern looking web app that provide quick player lookup and data visualization.
 
-## Current Todo ##
-#### V0.1.0 - Completed Initial GraphQL API #### 
-- [X] Apollo Server Setup
-- [X] Initial Entities / GraphQL Objects
+## Current Todo
+
+#### V0.1.0 - Completed Initial GraphQL API
+
+- [x] Apollo Server Setup
+- [x] Initial Entities / GraphQL Objects
 - [ ] Initial GraphQL Resolvers
-- [X] Docker Setup
+- [x] Docker Setup
 - [ ] Docker Production Deployment (Heroku?)
 - [ ] PostgreSQL Database Hosted
 
-#### V0.2.0 - Completed Initial Vue.js Client #### 
+#### V0.2.0 - Completed Initial Vue.js Client
+
 - [ ] Search View and Results
 - [ ] Player View
 
-## Objectives ##
-#### Current Objectives #### 
-* Develop a database that stores all player personal information and yearly statistics.
-* Create a search engine page that queries this database and returns results through a GraphQL API
-* When a player is selected through a search, retrieve and display their statistics.
+## Objectives
 
-#### Future Objectives ####
-* Develop additional features, such as: live scores, team statistics, contract information, custom visualiztion feautes (charts, graphs...) etc.
+#### Current Objectives
 
-## Technology Stack ##
-#### GraphQL TS API ####
-* https://nodejs.org/en/
-* https://www.apollographql.com/docs/apollo-server/
-* https://www.typescriptlang.org/
-* https://typeorm.io/
-* https://typegraphql.com/
+- Develop a database that stores all player personal information and yearly statistics.
+- Create a search engine page that queries this database and returns results through a GraphQL API
+- When a player is selected through a search, retrieve and display their statistics.
 
-#### PostegreSQL ####
-* https://www.postgresql.org/
+#### Future Objectives
 
-#### Vue.js ####
-* https://vuejs.org/
+- Develop additional features, such as: live scores, team statistics, contract information, custom visualiztion features (charts, graphs...) etc.
 
-## Author(s) ##
-* Andrew Greenan - [GitHub](https://github.com/greenan8) - [LinkedIn](https://www.linkedin.com/in/andrewbgreenan/)
+## Technology Stack
 
-## Acknowledgments ##
-* Drew Hynes
-  * [NHL API Documentation](https://gitlab.com/dword4/nhlapi)
-  * Drew has done a great job at breaking down and documenting the NHL's API! He has made my life much easier.
+#### GraphQL TS API
+
+- https://nodejs.org/en/
+- https://www.apollographql.com/docs/apollo-server/
+- https://www.typescriptlang.org/
+- https://typeorm.io/
+- https://typegraphql.com/
+
+#### PostegreSQL
+
+- https://www.postgresql.org/
+
+#### Vue.js
+
+- https://vuejs.org/
+
+## Author(s)
+
+- Andrew Greenan - [GitHub](https://github.com/greenan8) - [LinkedIn](https://www.linkedin.com/in/andrewbgreenan/)
+
+## Acknowledgments
+
+- Drew Hynes
+  - [NHL API Documentation](https://gitlab.com/dword4/nhlapi)
+  - Drew has done a great job at breaking down and documenting the NHL's API! He has made my life much easier.

@@ -1,7 +1,8 @@
 import { ChildEntity, Column } from "typeorm";
-import { Field } from "type-graphql";
+import { Field, ObjectType } from "type-graphql";
 import { Statistics } from "./Statistics";
 
+@ObjectType({ implements: Statistics })
 @ChildEntity()
 export class SkaterStatistics extends Statistics {
   @Field()

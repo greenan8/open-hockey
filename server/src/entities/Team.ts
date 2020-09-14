@@ -1,15 +1,10 @@
-import {
-  Entity,
-  BaseEntity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-} from "typeorm";
-import { Field } from "type-graphql";
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
+import { Field, ObjectType } from "type-graphql";
 import { Division } from "./Division";
-import { Conference } from "./Conference";
+import { Player } from "./Player";
 
-@Entity()
+@ObjectType()
+@Entity("team")
 export class Team extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
@@ -28,7 +23,7 @@ export class Team extends BaseEntity {
   name: String;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   abbreviation: String;
 
   @Field()
@@ -47,11 +42,10 @@ export class Team extends BaseEntity {
   @Column()
   firstYearOfPlay: number;
 
-  @Field()
-  @ManyToOne(() => Division, (division: Division) => division.id)
-  division: Division;
+  @OneToMany(() => Player, (player: Player) => player.id)
+  players: Player[];
 
-  @Field()
-  @ManyToOne(() => Conference, (conference: Conference) => conference.id)
-  conference: Conference;
+  @Field({ nullable: true })
+  @ManyToOne(() => Division, (division: Division) => division.teams, { nullable: true })
+  division?: Division;
 }

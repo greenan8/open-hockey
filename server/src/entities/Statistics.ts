@@ -1,14 +1,8 @@
-import {
-  Entity,
-  TableInheritance,
-  BaseEntity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-} from "typeorm";
-import { Field } from "type-graphql";
+import { Entity, TableInheritance, BaseEntity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { Field, InterfaceType } from "type-graphql";
 import { Player } from "./Player";
 
+@InterfaceType()
 @Entity()
 @TableInheritance({ column: { type: "varchar", name: "type" } })
 export class Statistics extends BaseEntity {
@@ -16,8 +10,7 @@ export class Statistics extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
-  @ManyToOne(() => Player, (player: Player) => player.id)
+  @ManyToOne(() => Player, (player: Player) => player.statistics)
   player: Player;
 
   @Field()
