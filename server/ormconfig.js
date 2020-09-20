@@ -3,17 +3,21 @@ const SnakeNamingStrategy = require("typeorm-naming-strategies").SnakeNamingStra
 module.exports = [
   {
     name: "development",
-    type: "sqlite",
-    database: "database.sqlite",
+    type: "postgres",
+    host: "localhost",
+    port: 5432,
+    username: "postgres",
+    password: "postgres",
+    database: "open-hockey",
     synchronize: true,
     logging: true,
     entities: ["src/entities/**/*.ts"],
-    migrations: ["src/migration/**/*.ts"],
-    subscribers: ["src/subscriber/**/*.ts"],
+    migrations: ["src/migrations/**/*.ts"],
+    subscribers: ["src/subscribers/**/*.ts"],
     cli: {
       entitiesDir: "src/entities",
-      migrationsDir: "src/migration",
-      subscribersDir: "src/subscriber",
+      migrationsDir: "src/migrations",
+      subscribersDir: "src/subscribers",
     },
   },
   {
@@ -23,12 +27,12 @@ module.exports = [
     synchronize: true, // switch this to false once you have the initial tables created and use migrations instead
     logging: false,
     entities: ["dist/entities/**/*.js"],
-    migrations: ["dist/migration/**/*.js"],
-    subscribers: ["dist/subscriber/**/*.js"],
+    migrations: ["dist/migrations/**/*.js"],
+    subscribers: ["dist/subscribers/**/*.js"],
     cli: {
       entitiesDir: "dist/entities",
-      migrationsDir: "dist/migration",
-      subscribersDir: "dist/subscriber",
+      migrationsDir: "dist/migrations",
+      subscribersDir: "dist/subscribers",
     },
   },
 ];
