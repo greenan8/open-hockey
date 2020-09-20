@@ -3,18 +3,15 @@ import { ShootsCatches } from "../../entities/enum/ShootsCatches";
 import { Position } from "../../entities/enum/Position";
 
 @InputType()
-export class PlayerInput {
-  @Field(() => Int, { description: "NHL API identifying number" })
-  nhlId: number;
+export class PlayerUpdateInput {
+  @Field({ nullable: true })
+  fullName?: string;
 
-  @Field()
-  fullName: string;
+  @Field({ nullable: true })
+  firstName?: string;
 
-  @Field()
-  firstName: string;
-
-  @Field()
-  lastName: string;
+  @Field({ nullable: true })
+  lastName?: string;
 
   @Field({ nullable: true })
   primaryNumber?: number;
@@ -34,14 +31,14 @@ export class PlayerInput {
   @Field(() => Int, { nullable: true, description: "Kilogram Units" })
   weight?: number;
 
-  @Field()
-  active: boolean;
+  @Field({ nullable: true })
+  active?: boolean;
 
-  @Field()
-  rookie: boolean;
+  @Field({ nullable: true })
+  rookie?: boolean;
 
-  @Field()
-  rosterStatus: boolean;
+  @Field({ nullable: true })
+  rosterStatus?: boolean;
 
   @Field({ nullable: true })
   shootsCatches?: ShootsCatches;

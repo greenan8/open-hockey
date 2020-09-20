@@ -1,16 +1,16 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { Field, ObjectType } from "type-graphql";
+import { Field, ObjectType, ID } from "type-graphql";
 import { Division } from "./Division";
 
 @ObjectType()
 @Entity()
 export class Conference extends BaseEntity {
-  @Field()
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
-  @Column()
+  @Field(() => ID)
+  @Column({ type: "int" })
   nhlId: number;
 
   @Field()
@@ -29,6 +29,7 @@ export class Conference extends BaseEntity {
   @Column()
   abbreviation: String;
 
-  @OneToMany(() => Division, (division: Division) => division.id)
+  @Field(() => [Division])
+  @OneToMany(() => Division, (division: Division) => division.id, { lazy: true })
   divisions: Division[];
 }

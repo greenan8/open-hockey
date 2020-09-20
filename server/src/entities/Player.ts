@@ -1,18 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 import { Field, ObjectType, ID, Int } from "type-graphql";
-import { Position } from "./Position";
 import { Team } from "./Team";
-import { Statistics } from "./Statistics";
+import { Statistics } from "./Statistics/Statistics";
+import { ShootsCatches } from "./enum/ShootsCatches";
+import { Position } from "./enum/Position";
 
 @ObjectType()
 @Entity()
 export class Player extends BaseEntity {
-  @Field((_type) => ID)
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field((_type) => Int)
-  @Column("int", { nullable: false })
+  @Field(() => ID)
+  @Column({ type: "int", nullable: false })
   nhlId: number;
 
   @Field()
@@ -27,8 +28,8 @@ export class Player extends BaseEntity {
   @Column()
   lastName: string;
 
-  @Field((_type) => Int, { nullable: true })
-  @Column({ nullable: true })
+  @Field(() => Int, { nullable: true })
+  @Column({ type: "int", nullable: true })
   primaryNumber?: number;
 
   @Field({ nullable: true })
@@ -43,40 +44,40 @@ export class Player extends BaseEntity {
   @Column({ nullable: true })
   nationality?: string;
 
-  @Field((_type) => Int, { nullable: true, description: "Centimetre Units" })
-  @Column({ nullable: true })
+  @Field(() => Int, { nullable: true, description: "Centimetre Units" })
+  @Column({ type: "int", nullable: true })
   height?: number;
 
-  @Field((_type) => Int, { nullable: true, description: "Kilogram Units" })
-  @Column({ nullable: true })
+  @Field(() => Int, { nullable: true, description: "Kilogram Units" })
+  @Column({ type: "int", nullable: true })
   weight?: number;
 
   @Field()
-  @Column()
+  @Column({ default: false })
   active: boolean;
 
   @Field()
-  @Column()
+  @Column({ default: false })
   rookie: boolean;
 
-  @Field({ nullable: true, description: "Options are: L, R" })
-  @Column({ nullable: true })
-  shootsCatches?: string;
-
   @Field()
-  @Column()
-  rosterStatus: string;
+  @Column({ default: false })
+  rosterStatus: boolean;
 
-  @Field({ nullable: true })
-  @ManyToOne(() => Position, (position: Position) => position.players, {
-    nullable: true,
-  })
+  @Field(() => ShootsCatches, { nullable: true })
+  @Column({ nullable: true, enum: ShootsCatches, type: "enum" })
+  shootsCatches?: ShootsCatches;
+
+  @Field(() => Position, { nullable: true })
+  @Column({ nullable: true, enum: Position, type: "enum" })
   position?: Position;
 
-  @Field({ nullable: true })
-  @ManyToOne(() => Team, (team: Team) => team.players, { nullable: true })
+  @Field(() => Team, { nullable: true })
+  @ManyToOne(() => Team, (team: Team) => team.players, { nullable: true, lazy: true })
+  @JoinColumn({ name: "team_id" })
   team?: Team;
 
-  @OneToMany(() => Statistics, (statistics: Statistics) => statistics.id)
-  statistics: Statistics[];
+  @Field(() => [Statistics], { nullable: true })
+  @OneToMany(() => Statistics, (statistics: Statistics) => statistics.id, { nullable: true, lazy: true })
+  statistics?: Statistics[];
 }

@@ -1,25 +1,39 @@
-import { Query, Resolver, Arg, Mutation, UseMiddleware } from "type-graphql";
+import { Query, Resolver, Arg, Mutation, Authorized } from "type-graphql";
 import { getManager } from "typeorm";
 import { ApolloError } from "apollo-server-express";
 import { PlayerInput } from "./inputs/PlayerInput";
+import { PlayerUpdateInput } from "./inputs/PlayerUpdateInput";
 import { Player } from "../entities/Player";
-import { Position } from "../entities/Position";
 import { Team } from "../entities/Team";
 
 @Resolver()
 export class PlayerResolver {
   @Query(() => Player, { nullable: true })
-  async player(@Arg("nhlId") nhlId: number): Promise<Player | undefined> {
+  async player(@Arg("nhlId") nhlId: number): Promise<Player> {
     const playerRepo = getManager(process.env.NODE_ENV || "development").getRepository(Player);
-    return await playerRepo.findOne({ nhlId });
+    const player = await playerRepo.findOne({ nhlId });
+
+    if (!player) throw new ApolloError("No player was found.", "404");
+    return player;
   }
 
+  @Query(() => [Player], { nullable: true })
+  async findPlayers(@Arg("search") search: string): Promise<Player[] | undefined> {
+    if (search.length < 3) throw new ApolloError("Search string must be atleast 3 characters.");
+    const playerRepo = getManager(process.env.NODE_ENV || "development").getRepository(Player);
+
+    return await playerRepo
+      .createQueryBuilder()
+      .where("LOWER(fullName) LIKE :search", { search: `%${search.toLowerCase()}%` })
+      .limit(20)
+      .getMany();
+  }
+
+  @Authorized()
   @Mutation(() => Player)
-  @UseMiddleware()
   async createPlayer(@Arg("input") input: PlayerInput): Promise<Player> {
     try {
       const playerRepo = getManager(process.env.NODE_ENV || "development").getRepository(Player);
-      const positionRepo = getManager(process.env.NODE_ENV || "development").getRepository(Position);
       const teamRepo = getManager(process.env.NODE_ENV || "development").getRepository(Team);
 
       const newPlayer = playerRepo.create({
@@ -37,13 +51,49 @@ export class PlayerResolver {
         rookie: input.rookie,
         shootsCatches: input.shootsCatches,
         rosterStatus: input.rosterStatus,
-        position: await positionRepo.findOne({ code: input.position }),
+        position: input.position,
         team: await teamRepo.findOne({ abbreviation: input.team }),
       });
+
       await playerRepo.save(newPlayer);
       return newPlayer;
     } catch (error) {
-      throw new ApolloError("Failed to Create New Team");
+      throw new ApolloError("Failed to create a player.", "409");
+    }
+  }
+
+  @Authorized()
+  @Mutation(() => Player)
+  async updatePlayer(
+    @Arg("nhlId") nhlId: number,
+    @Arg("input") input: PlayerUpdateInput
+  ): Promise<Player | undefined> {
+    try {
+      const playerRepo = getManager(process.env.NODE_ENV || "development").getRepository(Player);
+      const teamRepo = getManager(process.env.NODE_ENV || "development").getRepository(Team);
+
+      let data: { [k: string]: any } = {};
+
+      if (input.fullName) data.fullName = input.fullName;
+      if (input.firstName) data.firstName = input.firstName;
+      if (input.lastName) data.lastName = input.lastName;
+      if (input.primaryNumber) data.primaryNumber = input.primaryNumber;
+      if (input.birthDate) data.birthDate = input.birthDate;
+      if (input.birthCountry) data.birthCountry = input.birthCountry;
+      if (input.nationality) data.fullName = input.nationality;
+      if (input.height) data.height = input.height;
+      if (input.weight) data.weight = input.weight;
+      if (input.active) data.active = input.active;
+      if (input.rookie) data.rookie = input.rookie;
+      if (input.shootsCatches) data.shootsCatches = input.shootsCatches;
+      if (input.rosterStatus) data.rosterStatus = input.rosterStatus;
+      if (input.position) data.position = input.position;
+      if (input.team) data.team = await teamRepo.findOne({ abbreviation: input.team });
+
+      await playerRepo.update({ nhlId }, data);
+      return await playerRepo.findOne({ nhlId });
+    } catch (error) {
+      throw new ApolloError("Failed to update the player.", "409");
     }
   }
 }

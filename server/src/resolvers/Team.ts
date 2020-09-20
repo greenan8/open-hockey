@@ -1,4 +1,4 @@
-import { Query, Resolver, Arg, Mutation, UseMiddleware } from "type-graphql";
+import { Query, Resolver, Arg, Mutation, Authorized } from "type-graphql";
 import { ApolloError } from "apollo-server-express";
 import { getManager } from "typeorm";
 import { TeamInput } from "./inputs/TeamInput";
@@ -13,12 +13,15 @@ export class TeamResolver {
     return await teamRepo.find({ active: true });
   }
 
+  @Authorized()
   @Mutation(() => Team)
-  @UseMiddleware()
   async createTeam(@Arg("input") input: TeamInput): Promise<Team> {
     try {
       const teamRepo = getManager(process.env.NODE_ENV || "development").getRepository(Team);
-      const divisionRepo = getManager(process.env.NODE_ENV || "development").getRepository(Division);
+      const divisionRepo = getManager(process.env.NODE_ENV || "development").getRepository(
+        Division
+      );
+
       const newTeam = teamRepo.create({
         nhlId: input.nhlId,
         active: input.active,
@@ -30,10 +33,11 @@ export class TeamResolver {
         firstYearOfPlay: input.firstYearOfPlay,
         division: await divisionRepo.findOne({ name: input.division }),
       });
+
       await teamRepo.save(newTeam);
       return newTeam;
     } catch (error) {
-      throw new ApolloError("Failed to Create New Team.");
+      throw new ApolloError("Failed to Create New Team.", "409");
     }
   }
 }
