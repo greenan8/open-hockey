@@ -1,13 +1,15 @@
-import { Query, Resolver, Arg, Mutation, Authorized } from "type-graphql";
+import { Query, Resolver, Arg, Mutation, Authorized, UseMiddleware } from "type-graphql";
 import { getManager } from "typeorm";
 import { ApolloError } from "apollo-server-express";
 import { PlayerInput } from "./inputs/PlayerInput";
 import { PlayerUpdateInput } from "./inputs/PlayerUpdateInput";
 import { Player } from "../entities/Player";
 import { Team } from "../entities/Team";
+import { rateLimit } from "../middleware/rateLimit";
 
 @Resolver()
 export class PlayerResolver {
+  @UseMiddleware(rateLimit(5, 60), rateLimit(25, 60 * 60), rateLimit(200, 60 * 60 * 24))
   @Query(() => Player, { nullable: true })
   async player(@Arg("nhlId") nhlId: number): Promise<Player> {
     const playerRepo = getManager(process.env.NODE_ENV || "development").getRepository(Player);
@@ -17,6 +19,7 @@ export class PlayerResolver {
     return player;
   }
 
+  @UseMiddleware(rateLimit(10, 60), rateLimit(50, 60 * 60), rateLimit(500, 60 * 60 * 24))
   @Query(() => [Player], { nullable: true })
   async findPlayers(@Arg("search") search: string): Promise<Player[] | undefined> {
     if (search.length < 3) throw new ApolloError("Search string must be atleast 3 characters.");
