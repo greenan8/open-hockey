@@ -8,7 +8,7 @@ export function rateLimit(max: number, window: number): MiddlewareFn {
   return async ({ args, context, info }, next) => {
     const errorMessage = await rateLimiter(
       { parent: undefined, args, context, info },
-      { max, window: `${window}s` }
+      { max: max, window: `${window}s` }
     );
     if (errorMessage) throw new ApolloError(errorMessage, "429");
     return next();
