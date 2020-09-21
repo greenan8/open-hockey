@@ -4,18 +4,27 @@ Utilizing the NHL's API to develop a hockey statisitcs platform. A modern lookin
 
 ## Current Todo
 
-#### V0.1.0 - Completed Initial GraphQL API
+#### Release #1 - Initial GraphQL API
 
 - [x] Apollo Server Setup
 - [x] Initial Entities / GraphQL Objects
+  - Player, Team, Conference, Divsion, Statistics
 - [ ] Initial GraphQL Resolvers
-- [x] Docker Setup
-- [ ] Docker Production Deployment (Heroku?)
-- [ ] PostgreSQL Database Hosted
+  - Creating, updating and finding
+  - Player search
+- [x] Middleware
+  - Admin Authorization and Rate Limit
+- [x] Docker Initial Setup
 
-#### V0.2.0 - Completed Initial Vue.js Client
+#### Release #2 - Data Transfer
 
-- [ ] Search View and Results
+- [ ] Host Server and Postgres Database (Heroku??)
+- [ ] Script to transfer data from NHL's API to Open Hockey's Database
+- [ ] Daily/Hourly Cron jobs to check for completed games and players to update.
+
+#### Release #3 - Vue Client
+
+- [ ] Search View
 - [ ] Player View
 
 ## Objectives
