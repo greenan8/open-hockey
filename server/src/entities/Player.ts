@@ -1,9 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, OneToMany, JoinColumn } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from "typeorm";
 import { Field, ObjectType, ID, Int } from "type-graphql";
 import { Team } from "./Team";
 import { Statistics } from "./Statistics/Statistics";
 import { ShootsCatches } from "./enum/ShootsCatches";
 import { Position } from "./enum/Position";
+import { SkaterStatistics } from "./Statistics/SkaterStatistics";
+import { GoalieStatistics } from "./Statistics/GoalieStatistics";
 
 @ObjectType()
 @Entity()
@@ -78,6 +88,9 @@ export class Player extends BaseEntity {
   team?: Team;
 
   @Field(() => [Statistics], { nullable: true })
-  @OneToMany(() => Statistics, (statistics: Statistics) => statistics.id, { nullable: true, lazy: true })
-  statistics?: Statistics[];
+  @OneToMany(() => Statistics, (statistics: Statistics) => statistics.id, {
+    nullable: true,
+    lazy: true,
+  })
+  statistics: SkaterStatistics[] | GoalieStatistics[];
 }
