@@ -62,22 +62,6 @@ export class StatisticsResolver {
       else data.prop = 0;
     });
 
-    // if(input.timeOnIce) data.timeOnIce = input.timeOnIce;
-    // if(input.shotPct) data.shotPct = input.shotPct;
-    // if(input.gameWinningGoals) data.gameWinningGoals = input.gameWinningGoals;
-    // if(input.overTimeGoals) data.overTimeGoals = input.overTimeGoals;
-    // if(input.shortHandedGoals) data.shortHandedGoals = input.shortHandedGoals;
-    // if(input.shortHandedPoints) data.shortHandedPoints = input.shortHandedPoints;
-    // if(input.shortHandedTimeOnIce) data.shortHandedTimeOnIce = input.shortHandedTimeOnIce;
-    // if(input.blocked) data.blocked = input.blocked;
-    // if(input.plusMinus) data.plusMinus = input.plusMinus;
-    // if(input.points) data.points = input.points;
-    // if(input.shifts) data.shifts = input.shifts;
-    // if(input.timeOnIcePerGame) data.timeOnIcePerGame = input.timeOnIcePerGame;
-    // if(input.evenTimeOnIcePerGame) data.evenTimeOnIcePerGame = input.evenTimeOnIcePerGame;
-    // if(input.shortHandedTimeOnIcePerGame) data.shortHandedTimeOnIcePerGame = input.shortHandedTimeOnIcePerGame;
-    // if(input.powerPlayTimeOnIcePerGame) data.powerPlayTimeOnIcePerGame = input.powerPlayTimeOnIcePerGame;
-
     const statisticsRepo = getManager(process.env.NODE_ENV || "development").getRepository(SkaterStatistics);
 
     if (statisticsId) {

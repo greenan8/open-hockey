@@ -16,24 +16,20 @@ export class TeamResolver {
   @Authorized()
   @Mutation(() => Team)
   async createTeam(@Arg("input") input: TeamInput): Promise<Team> {
+    const teamRepo = getManager(process.env.NODE_ENV || "development").getRepository(Team);
+    const divisionRepo = getManager(process.env.NODE_ENV || "development").getRepository(Division);
+
+    let data: { [k: string]: any } = {};
+
+    data.division = await divisionRepo.findOne({ name: input.division });
+
+    const getValue = (key: string) => (obj: Record<string, any>) => obj[key];
+    Object.getOwnPropertyNames(Team).forEach((prop: string) => {
+      if (getValue(prop)(input)) data.prop = getValue(prop)(input);
+    });
+
     try {
-      const teamRepo = getManager(process.env.NODE_ENV || "development").getRepository(Team);
-      const divisionRepo = getManager(process.env.NODE_ENV || "development").getRepository(
-        Division
-      );
-
-      const newTeam = teamRepo.create({
-        nhlId: input.nhlId,
-        active: input.active,
-        name: input.name,
-        abbreviation: input.abbreviation,
-        teamName: input.teamName,
-        locationName: input.locationName,
-        shortName: input.shortName,
-        firstYearOfPlay: input.firstYearOfPlay,
-        division: await divisionRepo.findOne({ name: input.division }),
-      });
-
+      const newTeam = teamRepo.create(data);
       await teamRepo.save(newTeam);
       return newTeam;
     } catch (error) {
