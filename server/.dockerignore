@@ -1,3 +1,5 @@
 dist
 node_modules
 database.sqlite
+.env.production
+.env

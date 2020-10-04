@@ -4,23 +4,23 @@ FROM node
 WORKDIR /usr/app
 
 # Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
 COPY package*.json ./
+COPY yarn.lock ./
 
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
+RUN yarn
 
-# Bundle app source
 COPY . .
 
-# TypeScript build
-RUN npm run build
-COPY ormconfig.js ./dist/
-COPY .env.production ./dist/.env
-WORKDIR ./dist
+RUN yarn build
 
-# Expose and run app
+# Copy configs
+COPY ormconfig.js ./dist/
+
+# Production
+# COPY .env.production ./dist/.env 
+# OR local dev
+# COPY .env ./dist/.env 
+
+# Expose and Run App
 EXPOSE 4000
-CMD node index.js
+CMD node dist/index.js

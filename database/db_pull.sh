@@ -1,0 +1,1 @@
+pg_dump -h [ADDRESS] -Fc -o -U [USER] [DATABASE] > data.sql

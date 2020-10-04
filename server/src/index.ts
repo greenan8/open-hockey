@@ -9,9 +9,7 @@ import { resolvers } from "./resolvers";
 (async () => {
   const app = express();
 
-  const options = await getConnectionOptions(
-    process.env.NODE_ENV || "development"
-  );
+  const options = await getConnectionOptions(process.env.NODE_ENV || "development");
   await createConnection({
     ...options,
     namingStrategy: new SnakeNamingStrategy(),
@@ -21,6 +19,16 @@ import { resolvers } from "./resolvers";
     schema: await buildSchema({
       resolvers: resolvers,
       validate: true,
+      authChecker: ({ context: { req } }) => {
+        if (
+          req.headers.username == process.env.ADMIN_USER &&
+          req.headers.password == process.env.ADMIN_PASSWORD
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      },
     }),
     context: ({ req, res }) => ({ req, res }),
   });
