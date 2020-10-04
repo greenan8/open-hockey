@@ -21,12 +21,13 @@ export class TeamResolver {
 
     let data: { [k: string]: any } = {};
 
-    data.division = await divisionRepo.findOne({ name: input.division });
-
-    const getValue = (key: string) => (obj: Record<string, any>) => obj[key];
-    Object.getOwnPropertyNames(Team).forEach((prop: string) => {
-      if (getValue(prop)(input)) data.prop = getValue(prop)(input);
+    Object.getOwnPropertyNames(input).forEach((prop: string) => {
+      if (Object.getOwnPropertyDescriptors(input)[prop].value) {
+        data[prop] = Object.getOwnPropertyDescriptors(input)[prop].value;
+      }
     });
+
+    if (input.division) data.division = await divisionRepo.findOne({ name: input.division });
 
     try {
       const newTeam = teamRepo.create(data);

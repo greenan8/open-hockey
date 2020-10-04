@@ -1,12 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  BaseEntity,
-  ManyToOne,
-  OneToMany,
-  JoinColumn,
-} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne, OneToMany } from "typeorm";
 import { Field, ObjectType, ID, Int } from "type-graphql";
 import { Team } from "./Team";
 import { Statistics } from "./Statistics/Statistics";
@@ -84,13 +76,12 @@ export class Player extends BaseEntity {
 
   @Field(() => Team, { nullable: true })
   @ManyToOne(() => Team, (team: Team) => team.players, { nullable: true, lazy: true })
-  @JoinColumn({ name: "team_id" })
   team?: Team;
 
   @Field(() => [Statistics], { nullable: true })
-  @OneToMany(() => Statistics, (statistics: Statistics) => statistics.id, {
+  @OneToMany(() => Statistics, (statistics: Statistics) => statistics.player, {
     nullable: true,
     lazy: true,
   })
-  statistics: SkaterStatistics[] | GoalieStatistics[];
+  statistics?: SkaterStatistics[] | GoalieStatistics[];
 }

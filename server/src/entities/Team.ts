@@ -43,15 +43,16 @@ export class Team extends BaseEntity {
   @Column()
   firstYearOfPlay: number;
 
-  @OneToMany(() => Player, (player: Player) => player.id)
+  @OneToMany(() => Player, (player: Player) => player.team, { lazy: true })
   players: Player[];
 
   @Field(() => [Player])
-  roster(@Root() team: Team): Player[] {
-    return team.players.filter((player) => player.rosterStatus);
+  async roster(@Root() team: Team): Promise<Player[]> {
+    let players = await team.players;
+    return players.filter((player) => player.rosterStatus);
   }
 
-  @OneToMany(() => Statistics, (statistics: Statistics) => statistics.id, { nullable: true })
+  @OneToMany(() => Statistics, (statistics: Statistics) => statistics.team, { nullable: true, lazy: true })
   statistics?: Statistics[];
 
   @Field({ nullable: true })

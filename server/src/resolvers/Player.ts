@@ -1,4 +1,4 @@
-import { Query, Resolver, Arg, Mutation, Authorized, UseMiddleware } from "type-graphql";
+import { Query, Resolver, Arg, Mutation, Authorized, UseMiddleware, ID } from "type-graphql";
 import { getManager } from "typeorm";
 import { ApolloError } from "apollo-server-express";
 import { PlayerInput } from "./inputs/PlayerInput";
@@ -11,7 +11,7 @@ import { rateLimit } from "../middleware/rateLimit";
 export class PlayerResolver {
   @UseMiddleware(rateLimit(20, 60 * 60))
   @Query(() => Player, { nullable: true })
-  async player(@Arg("nhlId") nhlId: number): Promise<Player> {
+  async player(@Arg("nhlId", () => ID) nhlId: number): Promise<Player> {
     const playerRepo = getManager(process.env.NODE_ENV || "development").getRepository(Player);
     const player = await playerRepo.findOne({ nhlId });
 
@@ -27,7 +27,7 @@ export class PlayerResolver {
 
     return await playerRepo
       .createQueryBuilder()
-      .where("LOWER(fullName) LIKE :search", { search: `%${search.toLowerCase()}%` })
+      .orderBy(`similarity(full_name, '${search.toLowerCase()}')`, "DESC")
       .limit(20)
       .getMany();
   }
@@ -40,12 +40,13 @@ export class PlayerResolver {
 
     let data: { [k: string]: any } = {};
 
-    if (input.team) data.team = await teamRepo.findOne({ abbreviation: input.team });
-
-    const getValue = (key: string) => (obj: Record<string, any>) => obj[key];
-    Object.getOwnPropertyNames(Player).forEach((prop: string) => {
-      if (getValue(prop)(input)) data.prop = getValue(prop)(input);
+    Object.getOwnPropertyNames(input).forEach((prop: string) => {
+      if (Object.getOwnPropertyDescriptors(input)[prop].value) {
+        data[prop] = Object.getOwnPropertyDescriptors(input)[prop].value;
+      }
     });
+
+    if (input.team) data.team = await teamRepo.findOne({ abbreviation: input.team });
 
     const newPlayer = playerRepo.create(data);
     try {
@@ -58,18 +59,22 @@ export class PlayerResolver {
 
   @Authorized()
   @Mutation(() => Player)
-  async updatePlayer(@Arg("nhlId") nhlId: number, @Arg("input") input: PlayerUpdateInput): Promise<Player | undefined> {
+  async updatePlayer(
+    @Arg("nhlId", () => ID) nhlId: number,
+    @Arg("input") input: PlayerUpdateInput
+  ): Promise<Player | undefined> {
     const playerRepo = getManager(process.env.NODE_ENV || "development").getRepository(Player);
     const teamRepo = getManager(process.env.NODE_ENV || "development").getRepository(Team);
 
     let data: { [k: string]: any } = {};
 
-    if (input.team) data.team = await teamRepo.findOne({ abbreviation: input.team });
-
-    const getValue = (key: string) => (obj: Record<string, any>) => obj[key];
-    Object.getOwnPropertyNames(Player).forEach((prop: string) => {
-      if (getValue(prop)(input)) data.prop = getValue(prop)(input);
+    Object.getOwnPropertyNames(input).forEach((prop: string) => {
+      if (Object.getOwnPropertyDescriptors(input)[prop].value) {
+        data[prop] = Object.getOwnPropertyDescriptors(input)[prop].value;
+      }
     });
+
+    if (input.team) data.team = await teamRepo.findOne({ abbreviation: input.team });
 
     try {
       await playerRepo.update({ nhlId }, data);

@@ -13,7 +13,7 @@ export abstract class Statistics extends BaseEntity {
   id: number;
 
   @Field(() => Player)
-  @ManyToOne(() => Player, (player: Player) => player.statistics)
+  @ManyToOne(() => Player, (player: Player) => player.statistics, { lazy: true })
   player: Player;
 
   @Field(() => Team)
