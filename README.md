@@ -9,7 +9,7 @@ Utilizing the NHL's API to develop a hockey statisitcs platform. A modern lookin
 - [x] Apollo Server Setup
 - [x] Initial Entities / GraphQL Objects
   - Player, Team, Conference, Divsion, Statistics
-- [ ] Initial GraphQL Resolvers
+- [x] Initial GraphQL Resolvers
   - Creating, updating and finding
   - Player search
 - [x] Middleware
@@ -18,7 +18,7 @@ Utilizing the NHL's API to develop a hockey statisitcs platform. A modern lookin
 
 #### Release #2 - Data Transfer
 
-- [ ] Host Server and Postgres Database (Heroku??)
+- [ ] Host Server and Postgres Database (Digital Ocean)
 - [ ] Script to transfer data from NHL's API to Open Hockey's Database
 - [ ] Daily/Hourly Cron jobs to check for completed games and players to update.
 
