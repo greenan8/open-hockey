@@ -1,4 +1,11 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
+import {
+  Entity,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+} from "typeorm";
 import { Field, ObjectType, ID } from "type-graphql";
 import { Team } from "./Team";
 import { Conference } from "./Conference";
@@ -11,7 +18,7 @@ export class Division extends BaseEntity {
   id: number;
 
   @Field(() => ID)
-  @Column({ type: "int" })
+  @Column({ type: "int", nullable: false, unique: true })
   nhlId: number;
 
   @Field()
@@ -35,6 +42,10 @@ export class Division extends BaseEntity {
   teams: Team[];
 
   @Field()
-  @ManyToOne(() => Conference, (conference: Conference) => conference.divisions, { lazy: true })
+  @ManyToOne(
+    () => Conference,
+    (conference: Conference) => conference.divisions,
+    { lazy: true }
+  )
   conference: Conference;
 }
