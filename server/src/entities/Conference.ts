@@ -36,7 +36,7 @@ export class Conference extends BaseEntity {
   abbreviation: String;
 
   @Field(() => [Division])
-  @OneToMany(() => Division, (division: Division) => division.id, {
+  @OneToMany(() => Division, (division: Division) => division.conference, {
     lazy: true,
   })
   divisions: Division[];

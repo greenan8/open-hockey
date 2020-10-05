@@ -5,15 +5,24 @@ import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { resolvers } from "./resolvers";
+import { exit } from "process";
 
 (async () => {
   const app = express();
 
-  const options = await getConnectionOptions(process.env.NODE_ENV || "development");
-  await createConnection({
-    ...options,
-    namingStrategy: new SnakeNamingStrategy(),
-  });
+  try {
+    const options = await getConnectionOptions(
+      process.env.NODE_ENV || "development"
+    );
+    await createConnection({
+      ...options,
+      namingStrategy: new SnakeNamingStrategy(),
+    });
+  } catch (e) {
+    console.log("Failed to connected to the database.");
+    console.log(e);
+    exit();
+  }
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({

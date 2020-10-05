@@ -1,4 +1,4 @@
-FROM node
+FROM node:13.11.0
 
 # Create app directory
 WORKDIR /usr/app
@@ -19,7 +19,7 @@ COPY ormconfig.js ./dist/
 # Production
 # COPY .env.production ./dist/.env 
 # OR local dev
-# COPY .env ./dist/.env 
+COPY .env ./dist/.env 
 
 # Expose and Run App
 EXPOSE 4000

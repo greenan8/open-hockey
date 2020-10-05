@@ -2,4 +2,4 @@ dist
 node_modules
 database.sqlite
 .env.production
-.env
+docker_build.sh

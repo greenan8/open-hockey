@@ -1,4 +1,5 @@
-const SnakeNamingStrategy = require("typeorm-naming-strategies").SnakeNamingStrategy;
+const SnakeNamingStrategy = require("typeorm-naming-strategies")
+  .SnakeNamingStrategy;
 
 module.exports = [
   {
@@ -11,7 +12,7 @@ module.exports = [
     database: "open-hockey",
     synchronize: true,
     logging: true,
-    entities: ["src/entities/**/*.ts"],
+    entities: ["../**/*.entity.{ts,js}"],
     migrations: ["src/migrations/**/*.ts"],
     subscribers: ["src/subscribers/**/*.ts"],
     cli: {
@@ -23,7 +24,12 @@ module.exports = [
   {
     name: "production",
     type: "postgres",
-    url: process.env.DATABASE_URL,
+    host: process.env.DB_URL,
+    port: 25060,
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    ssl: true,
     synchronize: true, // switch this to false once you have the initial tables created and use migrations instead
     logging: false,
     entities: ["dist/entities/**/*.js"],
