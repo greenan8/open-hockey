@@ -12,7 +12,7 @@ module.exports = [
     database: "open-hockey",
     synchronize: true,
     logging: true,
-    entities: ["../**/*.entity.{ts,js}"],
+    entities: ["src/entities/**/*.ts"],
     migrations: ["src/migrations/**/*.ts"],
     subscribers: ["src/subscribers/**/*.ts"],
     cli: {
@@ -22,7 +22,7 @@ module.exports = [
     },
   },
   {
-    name: "production",
+    name: "Production",
     type: "postgres",
     host: process.env.DB_URL,
     port: 25060,
@@ -30,7 +30,7 @@ module.exports = [
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     ssl: true,
-    synchronize: true, // switch this to false once you have the initial tables created and use migrations instead
+    synchronize: false,
     logging: false,
     entities: ["dist/entities/**/*.js"],
     migrations: ["dist/migrations/**/*.js"],

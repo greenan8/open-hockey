@@ -47,6 +47,14 @@ export class Player extends BaseEntity {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
+  birthCity?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  birthStateProvince?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   birthCountry?: string;
 
   @Field({ nullable: true })

@@ -23,6 +23,12 @@ export class PlayerInput {
   birthDate?: Date;
 
   @Field({ nullable: true })
+  birthCity?: string;
+
+  @Field({ nullable: true })
+  birthStateProvince?: string;
+
+  @Field({ nullable: true })
   birthCountry?: string;
 
   @Field({ nullable: true })

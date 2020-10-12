@@ -38,7 +38,7 @@ export class Division extends BaseEntity {
   abbreviation: String;
 
   @Field(() => [Team])
-  @OneToMany(() => Team, (team: Team) => team.id, { lazy: true })
+  @OneToMany(() => Team, (team: Team) => team.division, { lazy: true })
   teams: Team[];
 
   @Field()

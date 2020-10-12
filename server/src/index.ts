@@ -6,6 +6,8 @@ import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { resolvers } from "./resolvers";
 import { exit } from "process";
+// import { NewPlayerJob } from "./jobs/NewPlayer";
+import { addTeamJob } from "./jobs/AddTeam";
 
 (async () => {
   const app = express();
@@ -45,10 +47,14 @@ import { exit } from "process";
   apolloServer.applyMiddleware({ app, cors: false });
   const port = process.env.PORT || 4000;
   app.listen(port, () => {
-    console.log("=".repeat(80));
-    console.log(
-      `🏒 Open Hockey’s GraphQL API Is on the Ice At: \x1b[34mhttp://localhost:${port}/graphql\x1b[0m 🏒`
-    );
-    console.log("=".repeat(80));
+    // new NewPlayerJob().schedule();
+    new addTeamJob().schedule();
+    if (!process.env.NODE_ENV) {
+      console.log("=".repeat(80));
+      console.log(
+        `🏒 Open Hockey’s GraphQL API Is on the Ice At: \x1b[34mhttp://localhost:${port}/graphql\x1b[0m 🏒`
+      );
+      console.log("=".repeat(80));
+    }
   });
 })();
